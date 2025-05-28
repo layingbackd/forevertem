@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>작가 아카이브</title>
+  <style>
+    /* body {
+      font-family: 'Noto Sans KR', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #333;
+      padding-bottom: 15px;
+    }
+    #gallery {
+      display: grid;
+      gap: 40px;
+    }
+    section {
+      border: 1px solid #eee;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    img {
+      max-width: 300px;
+      max-height: 300px;
+      object-fit: contain;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+    p {
+      white-space: pre-wrap;
+    } */
+  </style>
+</head>
+<body>
+  <h1>작품 아카이브</h1>
+  <div id="gallery"></div>
+  
+  <script>
+    // content.json 파일 불러오기
+    fetch('content.json')
+      .then(response => response.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          document.getElementById('gallery').innerHTML = '<p>등록된 작품이 없습니다.</p>';
+          return;
+        }
+        
+        const gallery = document.getElementById('gallery');
+        
+        data.forEach(item => {
+          const section = document.createElement('section');
+          
+          // 제목
+          const title = document.createElement('h2');
+          title.textContent = item.title;
+          section.appendChild(title);
+          
+          // 설명
+          const description = document.createElement('p');
+          description.textContent = item.text;
+          section.appendChild(description);
+          
+          // 이미지 컨테이너
+          const imageContainer = document.createElement('div');
+          imageContainer.className = 'image-container';
+          
+          // 각 이미지 추가
+          if (item.images && item.images.length > 0) {
+            item.images.forEach(imgFile => {
+              const img = document.createElement('img');
+              img.src = `artworks/${item.folder}/${imgFile}`;
+              img.alt = `${item.title} - ${imgFile}`;
+              img.loading = 'lazy';
+              
+              // 이미지 클릭 시 확대
+              img.addEventListener('click', () => {
+                window.open(img.src, '_blank');
+              });
+              
+              imageContainer.appendChild(img);
+            });
+          } else {
+            const noImage = document.createElement('p');
+            noImage.textContent = '이미지가 없습니다.';
+            imageContainer.appendChild(noImage);
+          }
+          
+          section.appendChild(imageContainer);
+          gallery.appendChild(section);
+        });
+      })
+      .catch(error => {
+        console.error('오류:', error);
+        document.getElementById('gallery').innerHTML = `<p>콘텐츠를 불러오는데 문제가 발생했습니다.</p>`;
+      });
+  </script>
+</body>
+</html> 
